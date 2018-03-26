@@ -6,25 +6,35 @@ class TodoList extends Component {
     render() {
         const {todos} = this.props;
 
-        const TodoComponents = [];
-
-        for (let i=0; i<todos.length; i++) {
-            const todo = todos[i];
-            TodoComponents.push(<Todo key={i} data={todo}/>);
-        }
-
         return (
             <div className="main">
                 <ul id="list">
-                    {TodoComponents}
+                    {
+                        todos.map((data, index) => {
+                            return (
+                                <Todo onToggle={this._handleToggle.bind(this, index)}
+                                      onRemove={this._handleRemoveTodo.bind(this, index)} key={index} data={data}/>
+                            );
+                        })
+                    }
                 </ul>
             </div>
         );
     }
+
+    _handleToggle(id) {
+        this.props.onToggle(id);
+    }
+
+    _handleRemoveTodo(id) {
+        this.props.onDeleteTodo(id);
+    }
 }
 
 TodoList.propTypes = {
-    todos: PropTypes.array
+    onToggle: PropTypes.func.isRequired,
+    onDeleteTodo: PropTypes.func.isRequired,
+    todos: PropTypes.array.isRequired
 };
 
 export default TodoList;

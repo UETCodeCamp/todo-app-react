@@ -2,11 +2,20 @@ import React, {Component} from 'react';
 import "./style.css";
 import Header from "./Header";
 import TodoList from "./TodoList";
+import {getTodos, saveTodos} from "./services/StorageServices";
 
 class App extends Component {
     state = {
         todos: []
     };
+
+    componentDidMount() {
+        const todos = getTodos();
+
+        this.setState({
+            todos: todos
+        });
+    }
 
     render() {
         const {todos} = this.state;
@@ -14,14 +23,36 @@ class App extends Component {
         return (
             <div className="TodoApp">
                 <Header onCreate={this.handleOnCreate.bind(this)}/>
-                <TodoList onDeleteTodo={this.handleDelete.bind(this)} todos={todos}/>
+                <TodoList todos={todos}
+                          onToggle={this.handleToggle.bind(this)}
+                          onDeleteTodo={this.handleDelete.bind(this)}/>
             </div>
         );
     }
 
+    handleToggle(id) {
+        const {todos} = this.state;
+        const todo = todos[id];
 
-    handleDelete() {
-        console.log('');
+        todo.completed = !todo.completed;
+
+        this.setState({
+            todos: todos
+        });
+
+        this._saveToLocalStorage();
+    }
+
+    handleDelete(id) {
+        const {todos} = this.state;
+
+        todos.splice(id, 1);
+
+        this.setState({
+            todos: todos
+        });
+
+        this._saveToLocalStorage();
     }
 
     handleOnCreate(text) {
@@ -35,6 +66,14 @@ class App extends Component {
         this.setState({
             todos: todos,
         });
+
+        this._saveToLocalStorage();
+    }
+
+    _saveToLocalStorage() {
+        const {todos} = this.state;
+
+        saveTodos(todos);
     }
 }
 

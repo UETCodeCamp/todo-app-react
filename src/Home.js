@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import "./style.css";
 import Header from "./Header";
 import TodoList from "./TodoList";
-import {getTodos, saveTodos} from "./services/StorageServices";
+import {saveTodos} from "./services/StorageServices";
 import {createTodo, fetchTodos} from "./services/APIServices";
 
 class Home extends Component {

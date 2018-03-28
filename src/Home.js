@@ -3,6 +3,7 @@ import "./style.css";
 import Header from "./Header";
 import TodoList from "./TodoList";
 import {getTodos, saveTodos} from "./services/StorageServices";
+import {createTodo, fetchTodos} from "./services/APIServices";
 
 class Home extends Component {
     state = {
@@ -10,10 +11,18 @@ class Home extends Component {
     };
 
     componentDidMount() {
-        const todos = getTodos();
+        this.fetchListTodos();
+    }
 
-        this.setState({
-            todos: todos
+    fetchListTodos()  {
+        fetchTodos().then(object => {
+            const {data, success} = object;
+
+            if (success) {
+                this.setState({
+                    todos: data
+                });
+            }
         });
     }
 
@@ -56,18 +65,10 @@ class Home extends Component {
     }
 
     handleOnCreate(text) {
-        const {todos} = this.state;
-
-        todos.push({
-            text: text,
-            completed: false
-        });
-
-        this.setState({
-            todos: todos,
-        });
-
-        this._saveToLocalStorage();
+        createTodo(text)
+            .then(object => {
+                this.fetchListTodos();
+            });
     }
 
     _saveToLocalStorage() {

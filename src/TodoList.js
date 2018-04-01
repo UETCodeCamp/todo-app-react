@@ -12,8 +12,8 @@ class TodoList extends Component {
                     {
                         todos.map((data, index) => {
                             return (
-                                <Todo onToggle={this._handleToggle.bind(this, index)}
-                                      onRemove={this._handleRemoveTodo.bind(this, index)} key={index} data={data}/>
+                                <Todo onToggle={this._handleToggle.bind(this)}
+                                      onRemove={this._handleRemoveTodo.bind(this)} key={index} data={data}/>
                             );
                         })
                     }

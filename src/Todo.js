@@ -2,11 +2,11 @@ import React, {Component} from "react";
 
 class Todo extends Component {
     render() {
-        const {title, complete} = this.props.data;
+        const {title, completed} = this.props.data;
 
         return (
             <li
-                className={complete ? "completed" : ""}>
+                className={completed ? "completed" : ""}>
                 <span onClick={this._handleClickToggle.bind(this)}>{title}</span>
                 <span onClick={this._handleClickRemove.bind(this)}
                       className="close">x</span>
@@ -15,11 +15,15 @@ class Todo extends Component {
     }
 
     _handleClickToggle() {
-        this.props.onToggle();
+        const {data} = this.props;
+
+        this.props.onToggle(data._id);
     }
 
     _handleClickRemove() {
-        this.props.onRemove();
+        const {data} = this.props;
+
+        this.props.onRemove(data._id);
     }
 }
 

@@ -22,3 +22,27 @@ export const createTodo = (text) => {
             return response.json();
         });
 };
+
+export const deleteTodo = (id) => {
+    const url = `https://uetcc-todo-app.herokuapp.com/draft/${id}`;
+    const request = new Request(url, {
+        method: 'DELETE'
+    });
+
+    return fetch(request)
+        .then(response => {
+            return response.json();
+        });
+};
+
+export const toggleTodo = (id) => {
+    const url = `https://uetcc-todo-app.herokuapp.com/draft/${id}/toggle`;
+    const request = new Request(url, {
+        method: 'POST'
+    });
+
+    return fetch(request)
+        .then(response => {
+            return response.json();
+        });
+};

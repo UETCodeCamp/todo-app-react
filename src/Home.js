@@ -3,7 +3,7 @@ import "./style.css";
 import Header from "./Header";
 import TodoList from "./TodoList";
 import {saveTodos} from "./services/StorageServices";
-import {createTodo, fetchTodos} from "./services/APIServices";
+import {createTodo, deleteTodo, fetchTodos, toggleTodo} from "./services/APIServices";
 
 class Home extends Component {
     state = {
@@ -14,7 +14,7 @@ class Home extends Component {
         this.fetchListTodos();
     }
 
-    fetchListTodos()  {
+    fetchListTodos() {
         fetchTodos().then(object => {
             const {data, success} = object;
 
@@ -40,28 +40,18 @@ class Home extends Component {
     }
 
     handleToggle(id) {
-        const {todos} = this.state;
-        const todo = todos[id];
-
-        todo.completed = !todo.completed;
-
-        this.setState({
-            todos: todos
-        });
-
-        this._saveToLocalStorage();
+        toggleTodo(id)
+            .then(() => {
+                this.fetchListTodos();
+            });
     }
 
     handleDelete(id) {
-        const {todos} = this.state;
+        deleteTodo(id)
+            .then(() => {
+                this.fetchListTodos();
+            });
 
-        todos.splice(id, 1);
-
-        this.setState({
-            todos: todos
-        });
-
-        this._saveToLocalStorage();
     }
 
     handleOnCreate(text) {

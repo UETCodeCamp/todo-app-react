@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import "./style.css";
+import "../styles/style.css";
 import Header from "./Header";
 import TodoList from "./TodoList";
-import {saveTodos} from "./services/StorageServices";
-import {createTodo, deleteTodo, fetchTodos, toggleTodo} from "./services/APIServices";
+import {createTodo, deleteTodo, fetchTodos, toggleTodo} from "../services/APIServices";
 
 class Home extends Component {
     state = {
@@ -23,6 +22,8 @@ class Home extends Component {
                     todos: data
                 });
             }
+        }).catch(error => {
+            console.log(error);
         });
     }
 
@@ -56,15 +57,9 @@ class Home extends Component {
 
     handleOnCreate(text) {
         createTodo(text)
-            .then(object => {
+            .then(() => {
                 this.fetchListTodos();
             });
-    }
-
-    _saveToLocalStorage() {
-        const {todos} = this.state;
-
-        saveTodos(todos);
     }
 }
 

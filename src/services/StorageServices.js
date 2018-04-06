@@ -1,20 +1,11 @@
-export const getTodos = () => {
-    const str = localStorage.getItem('todos');
-
-    //Check empty string.
-    if (!str) {
-        return [];
-    }
-
-    try {
-        return JSON.parse(str);
-    } catch (error) {
-        return [];
-    }
+export const getAuth = () => {
+    return !!localStorage.getItem('token');
 };
 
-export const saveTodos = (todos) => {
-    const str = JSON.stringify(todos);
+export const setToken = (token) => {
+    return localStorage.setItem('token', token);
+};
 
-    return localStorage.setItem('todos', str);
+export const getToken = (token) => {
+    return localStorage.getItem('token');
 };

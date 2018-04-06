@@ -3,6 +3,7 @@ import "../styles/style.css";
 import Header from "./Header";
 import TodoList from "./TodoList";
 import {createTodo, deleteTodo, fetchTodos, toggleTodo} from "../services/APIServices";
+import {Redirect} from "react-router-dom";
 
 class Home extends Component {
     state = {
@@ -10,6 +11,12 @@ class Home extends Component {
     };
 
     componentDidMount() {
+        const {auth} = this.props;
+
+        if (!auth) {
+            return;
+        }
+
         this.fetchListTodos();
     }
 
@@ -29,6 +36,11 @@ class Home extends Component {
 
     render() {
         const {todos} = this.state;
+        const {auth} = this.props;
+
+        if (!auth) {
+            return <Redirect to="/login"/>;
+        }
 
         return (
             <div className="TodoApp">

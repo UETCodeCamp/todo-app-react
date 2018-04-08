@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import PropTypes from "prop-types";
 
 class Todo extends Component {
     render() {
@@ -26,5 +27,11 @@ class Todo extends Component {
         this.props.onRemove(data._id);
     }
 }
+
+Todo.propTypes = {
+    onRemove: PropTypes.func.isRequired,
+    onToggle: PropTypes.func.isRequired,
+    data: PropTypes.object,
+};
 
 export default Todo;

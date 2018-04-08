@@ -1,62 +1,82 @@
 import {getToken} from "./StorageServices";
 
-export const fetchTodos = () => {
+const BASE_URL = 'https://uetcc-todo-app.herokuapp.com';
+
+const _createRequest = (args) => {
+    const {route} = args;
+    delete args.route;
+
+    const url = BASE_URL + route;
+    const request = new Request(url, args);
+
+    return fetch(request)
+        .then(_handleResponse);
+};
+
+const _createAuthRequets = (args) => {
     const token = getToken();
 
-    return fetch('https://uetcc-todo-app.herokuapp.com/todos?token=' + token)
-        .then(response => {
-            return response.json();
-        });
+    const defaultHeaders = {
+        'Authorization': token
+    };
+
+    const {headers} = args;
+
+    return _createRequest({
+        ...args,
+        headers: {
+            ...defaultHeaders,
+            ...headers,
+        }
+    });
+};
+
+const _handleResponse = (response) => {
+    return response.json();
+};
+
+export const fetchTodos = () => {
+    return _createAuthRequets({
+        route: '/todos'
+    });
 };
 
 export const createTodo = (text) => {
-    const token = getToken();
-
-    const url = 'https://uetcc-todo-app.herokuapp.com/todos';
-    const request = new Request(url, {
+    return _createAuthRequets({
+        route: '/todos',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token
         },
         method: 'POST',
         body: JSON.stringify({
             title: text
         })
     });
-
-    return fetch(request)
-        .then(response => {
-            return response.json();
-        });
 };
 
 export const deleteTodo = (id) => {
-    const url = `https://uetcc-todo-app.herokuapp.com/draft/${id}`;
-    const request = new Request(url, {
-        method: 'DELETE'
+    return _createAuthRequets({
+        route: `/todos/${id}`,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        method: 'DELETE',
     });
-
-    return fetch(request)
-        .then(response => {
-            return response.json();
-        });
 };
 
 export const toggleTodo = (id) => {
-    const url = `https://uetcc-todo-app.herokuapp.com/draft/${id}/toggle`;
-    const request = new Request(url, {
-        method: 'POST'
+    return _createAuthRequets({
+        route: `/todos/${id}/toggle`,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        method: 'POST',
     });
-
-    return fetch(request)
-        .then(response => {
-            return response.json();
-        });
 };
 
 export const register = ({email, password, name}) => {
-    const url = `https://uetcc-todo-app.herokuapp.com/register`;
-    const request = new Request(url, {
+    return _createRequest({
+        route: '/register',
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -67,16 +87,11 @@ export const register = ({email, password, name}) => {
             name,
         })
     });
-
-    return fetch(request)
-        .then(response => {
-            return response.json();
-        });
 };
 
 export const login = ({email, password}) => {
-    const url = `https://uetcc-todo-app.herokuapp.com/login`;
-    const request = new Request(url, {
+    return _createRequest({
+        route: '/login',
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -86,9 +101,4 @@ export const login = ({email, password}) => {
             password,
         })
     });
-
-    return fetch(request)
-        .then(response => {
-            return response.json();
-        });
 };

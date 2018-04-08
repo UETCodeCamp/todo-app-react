@@ -5,35 +5,66 @@ import {Redirect} from "react-router-dom";
 
 class RegisterPage extends Component {
     state = {
-        success: false
+        name: '',
+        email: '',
+        password: '',
+        success: false,
     };
 
     render() {
-        const {success} = this.state;
+        const {name, email, password, success} = this.state;
 
         if (success) {
-            return <Redirect to="/login" />
+            return <Redirect to="/login"/>;
         }
 
         return (
             <div className="RegisterPage">
                 <h1>Register Page</h1>
 
+
+                <form onSubmit={this._handleOnSubmit.bind(this)}>
+                    <input onChange={this._handleChangeInput.bind(this, 'name')}
+                           value={name} placeholder="Your name"
+                           type="text"/>
+                    <input
+                        onChange={this._handleChangeInput.bind(this, 'email')}
+                        value={email} placeholder="Your email" type="email"/>
+                    <input
+                        onChange={this._handleChangeInput.bind(this, 'password')}
+                        value={password} placeholder="Your password" type="password"/>
+
+                    <button>Register</button>
+                </form>
             </div>
         );
     }
 
-    componentDidMount() {
-        const email = "tutv95@gmail.com";
-        const password = '123456789';
-        const name = "Tu";
+    _handleChangeInput(field, e) {
+        const {value} = e.target;
 
-        register({email, password, name})
+        this.setState({
+            [field]: value
+        });
+    }
+
+    _handleOnSubmit(e) {
+        e.preventDefault();
+        const {name, email, password} = this.state;
+
+        register({name, email, password})
             .then(response => {
-                this.setState({
-                    success: true
-                });
+                const {success, message} = response;
+
+                if (success) {
+                    this.setState({
+                        success: true
+                    });
+                } else {
+                    alert(message);
+                }
             });
+
     }
 }
 
